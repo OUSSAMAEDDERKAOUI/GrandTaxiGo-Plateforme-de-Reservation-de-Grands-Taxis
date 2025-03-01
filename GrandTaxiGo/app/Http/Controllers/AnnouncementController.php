@@ -97,7 +97,24 @@ class AnnouncementController extends Controller
     }
 
 
+public function getReservations($announcementId)
+{
+    $announcement = Announcement::findOrFail($announcementId);
 
+    $reservations = $announcement->reservations;
+
+    return response()->json([
+        'reservations' => $reservations->map(function ($reservation) {
+            return [
+                'pickup_location' => $reservation->pickup_location, 
+                'passenger_count' => $reservation->passengers_nbr,
+                'status' => $reservation->status,
+                'id' => $reservation->id,
+
+            ];
+        })
+    ]);
+}
 
 
 
