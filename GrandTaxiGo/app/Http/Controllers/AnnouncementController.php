@@ -39,7 +39,6 @@ class AnnouncementController extends Controller
 
         // dd($request);
 
-
         $announcement = new Announcement();
         $announcement->title = $request->title;
         $announcement->centent = $request->content;
