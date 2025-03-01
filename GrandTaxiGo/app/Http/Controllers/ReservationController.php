@@ -16,6 +16,24 @@ use Illuminate\Support\Facades\Auth;
 class ReservationController extends Controller
 {
 
+public function create(request $request){
+        
+
+    $resservation= Reservation::create([
+        'pickup_location' => $request->pickup_location,
+        'destination' => $request->destination,
+        'status' => 'pending',
+        'departure_time' => $request->departure_time,
+        'passengers_nbr' =>$request->passengers_nbr,
+        'passenger_id' => auth()->id(),
+        'driver_id' => $request->driver_id,
+        'announcement_id' => $request->announcement_id ?? null,
+    ]);
+    return redirect()->route('passenger.announcements')->with('success', 'Réservation créée avec succès.');
+
+}
+
+
 
 
 
