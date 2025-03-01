@@ -23,6 +23,23 @@ class ReservationController extends Controller
 
 
 
+public function cancel($id){
+    $reservation=Reservation::with('Announcement')->findOrFail($id);
+    $now = Carbon::now();
+    if($reservation->announcement && $reservation->announcement->departure_date){
+        if ($now->greaterThanOrEqualTo($reservation->Announcement->departure_date)) {
+        
+            return redirect()->back()->with('error', 'Vous ne pouvez plus annuler la réservation, l\'heure de départ est déjà passée.');
+        }
+    }
+    elseif ($now->greaterThanOrEqualTo($reservation->departure_time)) {
+        
+            return redirect()->back()->with('error', 'Vous ne pouvez plus annuler la réservation, l\'heure de départ est déjà passée.');
+        }
+    $reservation->update(['status'=>"cancelled"]);
+    return to_route('passenger.trips')->with('message','la reservation est annulée');
+}
+
 
 public function accept($id){
     $reservation=Reservation::with('Announcement')->findOrFail($id);
