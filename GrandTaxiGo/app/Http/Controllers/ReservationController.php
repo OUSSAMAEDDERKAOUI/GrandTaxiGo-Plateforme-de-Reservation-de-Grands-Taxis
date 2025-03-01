@@ -16,47 +16,12 @@ use Illuminate\Support\Facades\Auth;
 class ReservationController extends Controller
 {
 
-public function create(request $request){
-        
-
-    $resservation= Reservation::create([
-        'pickup_location' => $request->pickup_location,
-        'destination' => $request->destination,
-        'status' => 'pending',
-        'departure_time' => $request->departure_time,
-        'passengers_nbr' =>$request->passengers_nbr,
-        'passenger_id' => auth()->id(),
-        'driver_id' => $request->driver_id,
-        'announcement_id' => $request->announcement_id ?? null,
-    ]);
-    return redirect()->route('passenger.announcements')->with('success', 'Réservation créée avec succès.');
-
-}
 
 
 
 
 
 
-
-
-
-public function cancel($id){
-    $reservation=Reservation::with('Announcement')->findOrFail($id);
-    $now = Carbon::now();
-    if($reservation->announcement && $reservation->announcement->departure_date){
-        if ($now->greaterThanOrEqualTo($reservation->Announcement->departure_date)) {
-        
-            return redirect()->back()->with('error', 'Vous ne pouvez plus annuler la réservation, l\'heure de départ est déjà passée.');
-        }
-    }
-    elseif ($now->greaterThanOrEqualTo($reservation->departure_time)) {
-        
-            return redirect()->back()->with('error', 'Vous ne pouvez plus annuler la réservation, l\'heure de départ est déjà passée.');
-        }
-    $reservation->update(['status'=>"cancelled"]);
-    return to_route('passenger.trips')->with('message','la reservation est annulée');
-}
 
 
 public function accept($id){
