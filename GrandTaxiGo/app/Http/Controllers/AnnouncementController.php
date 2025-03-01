@@ -62,14 +62,39 @@ class AnnouncementController extends Controller
         return redirect()->route('driver.announcements')->with('success', 'Annonce créée avec succès.');
     }
 
-    
+    public function show(Announcement $announcement)
+    {
+        return view('announcements.show', compact('announcement'));
+    }
 
     // Supprimer une annonce
-   
+    public function destroy(Announcement $announcement)
+    {
+        $announcement->delete();
+
+        return redirect()->route('announcements.index')->with('success', 'Annonce supprimée avec succès.');
+    }
 
 
 
- 
+    public function showAllAnnouncementsForPassenger(){
+
+        $announcements=Announcement::with('driver')->get();
+        $profile=user::where('id',auth()->id())->get();
+
+        return view('passenger.announcements',compact('announcements','profile'));
+
+    }
+    public function showAllAnnouncements(){
+
+        $announcements = Announcement::with('reservations')->where('driver_id', Auth::id())->get();
+
+                // dd($announcements);
+                $profile=user::where('id',auth()->id())->get();
+
+        return view('driver.announcements',compact('announcements','profile'));
+
+    }
 
 
 
